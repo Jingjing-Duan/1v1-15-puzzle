@@ -4,10 +4,10 @@
 
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #ffe29f 0%, #ffa99f 45%, #a18cd1 100%);
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef2f9 100%);
   min-height: 100vh;
-  color: #2d1b4e;
+  color: #222;
 }
 
 .app {
@@ -22,32 +22,26 @@ body {
 
 .header h1 {
   margin: 0;
-  font-family: 'Fredoka', cursive;
-  font-size: 4rem;
-  font-weight: 700;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #e60012;
   letter-spacing: 1px;
-  color: #fff;
-  text-shadow: 0 6px 18px rgba(74, 32, 107, 0.28);
+  text-shadow: 0 4px 10px rgba(230, 0, 18, 0.08);
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(8px);
-  border-radius: 28px;
+  background: #ffffff;
+  border-radius: 24px;
   padding: 24px;
-  max-width: 900px;
-  margin: 0 auto;
-  box-shadow:
-    0 18px 40px rgba(82, 35, 122, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.7);
-  border: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 0 12px 30px rgba(20, 20, 40, 0.08);
+  border: 2px solid #ececec;
 }
 
 .label {
   display: block;
   margin-bottom: 8px;
   font-weight: 700;
-  color: #5b2e91;
+  color: #333;
 }
 
 .input {
@@ -55,25 +49,25 @@ body {
   padding: 13px 14px;
   margin-bottom: 16px;
   border-radius: 16px;
-  border: 2px solid #f3c7ff;
+  border: 2px solid #d9dce5;
   font-size: 16px;
   outline: none;
-  background: #fffafc;
+  background: #fff;
   transition: 0.2s ease;
 }
 
 .input:focus {
-  border-color: #9b5de5;
-  box-shadow: 0 0 0 4px rgba(155, 93, 229, 0.15);
+  border-color: #4dabff;
+  box-shadow: 0 0 0 4px rgba(77, 171, 255, 0.16);
 }
 
 .room-box {
-  background: linear-gradient(135deg, #fff2b3, #ffd6e7);
-  border: 2px dashed #ff8fab;
+  background: linear-gradient(135deg, #fff9db, #f1f3ff);
+  border: 2px dashed #b8c0ff;
   border-radius: 18px;
   padding: 14px;
   margin-bottom: 16px;
-  color: #5a2b59;
+  color: #333;
   font-weight: 600;
 }
 
@@ -86,31 +80,34 @@ body {
 .btn {
   padding: 12px 20px;
   border: none;
-  border-radius: 16px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 800;
+  background: #e60012;
   color: white;
-  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.25);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  border-radius: 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 0 #b8000f;
+  transition: 0.15s;
 }
 
 .btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 24px rgba(255, 107, 107, 0.32);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #b8000f;
 }
 
 .btn.secondary {
-  background: linear-gradient(135deg, #4facfe, #00c6ff);
-  box-shadow: 0 10px 20px rgba(79, 172, 254, 0.25);
+  background: #4dabff;
+  box-shadow: 0 6px 0 #2d7dd2;
 }
 
 .btn.ready {
   width: 100%;
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
-  color: #124a34;
-  box-shadow: 0 10px 20px rgba(67, 233, 123, 0.25);
+  background: #2ec4b6;
+  color: white;
+  box-shadow: 0 6px 0 #1f8f85;
 }
 
 .btn:disabled {
@@ -133,17 +130,21 @@ body {
   min-height: 420px;
 }
 
+.left-panel {
+  text-align: left;
+}
+
 .left-panel h2,
 .board-panel h2 {
+  color: #e60012;
+  font-weight: 800;
   margin-top: 0;
-  font-size: 2rem;
-  color: #6a2dbd;
 }
 
 .left-panel p {
   font-size: 1.1rem;
   margin: 10px 0;
-  text-align: start; 
+  text-align: left;
 }
 
 .board-panel {
@@ -158,48 +159,53 @@ body {
   margin-top: 18px;
   padding: 18px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #ffd6e8, #ffeaa7, #c8f7ff);
-  box-shadow: inset 0 4px 18px rgba(255,255,255,0.6);
+  background: linear-gradient(135deg, #f8f9fa, #eef7ff);
+  border: 2px solid #e6ebf3;
 }
 
 .tile {
-  width: 82px;
-  height: 82px;
-  border: none;
-  border-radius: 22px;
-  font-size: 28px;
-  font-weight: 900;
-  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  font-size: 26px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  color: #222;
+  border: 3px solid transparent;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
+  transition: 0.15s;
 }
 
 .tile:hover {
-  transform: translateY(-3px) scale(1.03);
+  transform: translateY(-2px);
 }
 
 .tile:nth-child(4n + 1) {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+  background: #ffffff;
+  border-color: #e60012;
 }
 
 .tile:nth-child(4n + 2) {
-  background: linear-gradient(135deg, #f72585, #b5179e);
+  background: #f1f8ff;
+  border-color: #4dabff;
 }
 
 .tile:nth-child(4n + 3) {
-  background: linear-gradient(135deg, #4cc9f0, #4361ee);
+  background: #fff9db;
+  border-color: #f4b400;
 }
 
 .tile:nth-child(4n + 4) {
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
-  color: #124a34;
+  background: #ecfff9;
+  border-color: #2ec4b6;
 }
 
 .tile.empty {
-  background: rgba(255, 255, 255, 0.65);
-  box-shadow: inset 0 4px 10px rgba(0,0,0,0.06);
+  background: #f0f0f0;
+  border: 3px dashed #ccc;
   cursor: default;
+  box-shadow: none;
 }
 
 .progress-wrap {
@@ -212,13 +218,13 @@ body {
   margin-bottom: 8px;
   font-size: 16px;
   font-weight: 700;
-  color: #5a2d82;
+  color: #333;
 }
 
 .progress-bar {
   width: 100%;
   height: 14px;
-  background: rgba(180, 160, 220, 0.25);
+  background: #ececec;
   border-radius: 999px;
   overflow: hidden;
 }
@@ -226,7 +232,7 @@ body {
 .progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad961, #43e97b);
+  background: linear-gradient(90deg, #e60012, #ff8a00, #2ec4b6);
 }
 
 .result-card {
@@ -237,7 +243,7 @@ body {
 .result-card h2 {
   font-size: 2.6rem;
   margin-bottom: 12px;
-  color: #ff4f87;
+  color: #e60012;
 }
 
 .result-card p {
