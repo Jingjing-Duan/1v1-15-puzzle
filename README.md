@@ -1,102 +1,128 @@
-The lab's send_to_event_hubs() function creates a new EventHubProducerClient for every request. In a production system handling 10,000 requests/second, what is the primary problem with this approach?
-Question 15 options:
+# 🎮 1v1 15 Puzzle
 
-Each client instance consumes a separate partition, quickly exhausting all available partitions in the Event Hub
+A simple 1v1 multiplayer 15 puzzle game.  
+Each player solves their own board and competes based on progress and completion time.
 
+---
 
-Multiple producer clients cannot write to the same Event Hub simultaneously due to locking
+## Features
 
+- Create / Join room
+- 2 players per room
+- Ready system (both players must be ready)
+- Same initial puzzle board for both players
+- Local game logic (fast interaction)
+- Real-time progress comparison (via SpacetimeDB – in progress)
+- Result screen (winner, moves, time)
 
-Repeated AMQP and TLS handshakes cause high latency and connection exhaustion
+---
 
+## Project Structure
 
-Azure charges per client instance created, making this approach prohibitively expensive at scale
+### Frontend (React)
+- UI (Lobby, Game, Result)
+- Local puzzle logic
+- Progress calculation
+- API calls to lobby service
+- (Next) connect to SpacetimeDB
 
-----------------------------
-System Responsibilities
-Frontend
-Render the UI
-Run local puzzle logic
-Show opponent progress
-Send player progress updates
-Receive room/game state updates
-Lobby Service
-Create room
-Join room
-Mark player as ready
-Enforce 2-player room limit
-Trigger game start
-SpacetimeDB
-Store room state
-Store player ready state
-Store progress
-Store finished state
-Store winner
-Broadcast updates in real time
+### Lobby Service (Node.js + Express)
+- Create room
+- Join room
+- Ready system
+- Start game when both players are ready
 
+### SpacetimeDB (Planned / In Progress)
+- Sync player progress
+- Sync finished state
+- Determine winner
+- Real-time updates
 
-1. Frontend UI + Cloud Hosting
+---
 
-这个人负责：
+## Tech Stack
 
-游戏页面
-board UI
-result / progress UI
-把前端部署到 Azure Static Web Apps 或 App Service
+- Frontend: React + Vite
+- Backend: Node.js + Express
+- Realtime: SpacetimeDB
+- Styling: CSS (Switch-inspired UI)
 
-👉 这样他也有云的部分：frontend deployment
+---
+## 🏗️ System Architecture
 
-2. Puzzle Logic + Cloud Integration
+```mermaid
+flowchart LR
+    P1[Player 1 Browser] --> FE[Frontend Web App]
+    P2[Player 2 Browser] --> FE
 
-这个人负责：
+    FE --> LB[Lobby Service]
+    FE <--> ST[SpacetimeDB]
 
-shuffle
-move rules
-win check
-把游戏逻辑和云端同步的数据接起来
+    LB --> ROOM[Room State]
+    ST --> MATCH[Realtime Match State]
 
-比如：
+    MATCH --> DB1[player1Progress]
+    MATCH --> DB2[player2Progress]
+    MATCH --> DB3[Finished State]
+    MATCH --> DB4[Winner]
 
-本地 progress 怎么发到云端
-完成状态怎么提交到云端
+    FE --> GAME[Local Game Logic]
+```
 
-👉 云的部分：client-cloud integration
+## Game Flow
 
-3. SpacetimeDB / Realtime
+1. Player 1 creates a room
+2. Player 2 joins using room ID
+3. Both players click **Ready**
+4. Game starts with the same initial board
+5. Each player plays locally
+6. Progress is compared in real time
+7. First player to finish wins
 
-这个人负责：
+---
 
-schema
-subscriptions
-player state sync
-game state replication
+##  API (Lobby Service)
 
-👉 这是最明显的云部分：realtime cloud backend
+### Create Room
+POST /create-room
+Body: { "playerName": "Alice" }
 
-4. Lobby / Matchmaking Service
+---
 
-这个人负责：
+### Join Room  
+POST /join-room  
 
-create game
-join game
-room management
-把服务部署到 Azure
+Body: { "roomId": "ABC123", "playerName": "Bob" }
 
-👉 云的部分：backend microservice deployment
+---
 
-5. Leaderboard / Results / Storage
+### Ready  
+POST /ready  
+Body: { "roomId": "ABC123", "playerName": "Alice" }
 
-这个人负责：
+---
 
-leaderboard
-score validation
-result/history storage
-接 cloud database
+### Get Room State  
+GET /room/:roomId
 
-比如：
+## SpacetimeDB (Planned Interface)
 
-Azure SQL / Cosmos DB / PostgreSQL
+### Client sends
+{
+  roomId,
+  playerName,
+  progress,
+  isFinished
+}
 
-👉 云的部分：cloud database + result service
-
-
+### Client receives
+{
+  roomId,
+  player1,
+  player2,
+  player1Progress,
+  player2Progress,
+  player1Finished,
+  player2Finished,
+  winner
+}
