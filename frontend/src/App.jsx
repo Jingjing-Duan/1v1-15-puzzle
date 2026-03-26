@@ -1,6 +1,7 @@
+import { useState, useEffect } from "react";
 import "./styles.css";
 import { useGameLogic } from "./logic/useGameLogic";
-import { useState, useEffect } from "react";
+import { createRoom, joinRoom, markReady, getRoom } from "./services/lobbyApi";
 
 export default function App() {
   const [screen, setScreen] = useState("lobby");
@@ -10,7 +11,6 @@ export default function App() {
   const [isReady, setIsReady] = useState(false);
   const [winner, setWinner] = useState("");
 
-  // 接 Person B 的逻辑
   const {
     board,
     moves,
@@ -18,31 +18,59 @@ export default function App() {
     progress,
     isFinished,
     startGame,
+    resetGame,
     handleMove,
   } = useGameLogic();
 
-  // demo 用，对手进度先写死
-  const opponentProgress = 52;
+  // Demo shared board
+  const demoInitialBoard = [
+    1, 2, 3, 4,
+    5, 6, 7, 8,
+    9, 10, 11, 12,
+    13, 0, 14, 15,
+  ];
 
-  const handleCreateRoom = () => {
-    setRoomId("ROOM-123");
-    setScreen("lobby");
+  const opponentProgress = Math.min(progress + 10, 100);
+
+  const handleCreateRoom = async () => {
+    try {
+      const room = await createRoom(playerName);
+
+      console.log("Created room:", room);
+
+      setRoomId(room.roomId);
+      setScreen("lobby");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleJoinRoom = () => {
-    setScreen("lobby");
+  const handleJoinRoom = async () => {
+    try {
+      const room = await joinRoom(roomId, playerName);
+      console.log("Joined room:", room);
+      setRoomId(room.roomId);
+      setScreen("lobby");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleReady = () => {
-    setIsReady(true);
+  const handleReady = async () => {
+    try {
+      const room = await markReady(roomId, playerName);
 
-    // 开始游戏时调用 Person B 的逻辑
-    startGame();
+      console.log("Ready:", room);
 
-    // demo 用：ready 后直接进入 game
-    setTimeout(() => {
-      setScreen("game");
-    }, 500);
+      setIsReady(true);
+
+      setTimeout(() => {
+        setScreen("game");
+      }, 500);
+
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleTileClick = (index) => {
@@ -50,12 +78,12 @@ export default function App() {
   };
 
   const handleBackToLobby = () => {
+    resetGame();
     setIsReady(false);
     setWinner("");
     setScreen("lobby");
   };
 
-  // 游戏完成后自动跳结果页
   useEffect(() => {
     if (isFinished && screen === "game" && !winner) {
       setWinner(playerName);
@@ -66,7 +94,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>1vs1 15 Puzzle Online</h1>
+        <h1>1v1 15 Puzzle</h1>
       </header>
 
       {screen === "lobby" && (
@@ -74,6 +102,7 @@ export default function App() {
           playerName={playerName}
           setPlayerName={setPlayerName}
           roomId={roomId}
+          setRoomId={setRoomId}
           onCreateRoom={handleCreateRoom}
           onJoinRoom={handleJoinRoom}
           onReady={handleReady}
@@ -112,6 +141,7 @@ function LobbyScreen({
   playerName,
   setPlayerName,
   roomId,
+  setRoomId,
   onCreateRoom,
   onJoinRoom,
   onReady,
@@ -128,7 +158,13 @@ function LobbyScreen({
         onChange={(e) => setPlayerName(e.target.value)}
         placeholder="Enter your name"
       />
-
+      <label className="label">Room ID</label>
+      <input
+        className="input"
+        value={roomId}
+        onChange={(e) => setRoomId(e.target.value)}
+        placeholder="Enter room ID"
+      />
       <div className="room-box">
         <p><strong>Room ID:</strong> {roomId}</p>
       </div>

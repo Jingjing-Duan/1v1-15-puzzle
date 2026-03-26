@@ -15,14 +15,27 @@ export function useGameLogic() {
   const [isFinished, setIsFinished] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
-  const startGame = () => {
-    const shuffled = shuffleBoard(createSolvedBoard(), 120);
-    setBoard(shuffled);
+  const startGame = (initialBoard) => {
+    const boardToUse =
+      initialBoard && Array.isArray(initialBoard)
+        ? initialBoard
+        : shuffleBoard(createSolvedBoard(), 120);
+
+    setBoard(boardToUse);
     setMoves(0);
     setTime(0);
-    setProgress(calculateProgress(shuffled));
+    setProgress(calculateProgress(boardToUse));
     setIsFinished(false);
     setHasStarted(true);
+  };
+
+  const resetGame = () => {
+    setBoard(createSolvedBoard());
+    setMoves(0);
+    setTime(0);
+    setProgress(0);
+    setIsFinished(false);
+    setHasStarted(false);
   };
 
   useEffect(() => {
@@ -59,7 +72,9 @@ export function useGameLogic() {
     time,
     progress,
     isFinished,
+    hasStarted,
     startGame,
+    resetGame,
     handleMove,
   };
 }
